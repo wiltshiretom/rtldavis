@@ -60,6 +60,7 @@ var (
     verbose           *bool          // -v = emit verbose debug messages
     disableAfc        *bool          // -noafc = disable any automatic corrections
     deviceString      *string        // -d = device serial number or device index
+    decode            *bool          // -decode = decode message data into sensor readings
 
     // general
     actChan           [maxTr]int     // list with actual channels (0-7); 
@@ -148,6 +149,7 @@ var (
     verbose = flag.Bool("v", false, "emit verbose debug messages")
     disableAfc = flag.Bool("noafc", false, "disable any AFC")
     deviceString = flag.String("d","0","device serial number or device index")
+    decode = flag.Bool("decode", false, "decode message data into human-readable sensor readings")
 
     flag.Parse()
     protocol.Verbose = *verbose
@@ -380,7 +382,11 @@ func main() {
                 if testFreq {
                     if testNumber > 0 {
                         if msgIdToChan[int(msg.ID)] != 9 {
-                            log.Printf("TESTFREQ %d: Frequency %d (freqCorr=%d): OK, msg.data: %02X", testNumber, testChannelFreq, freqCorr, msg.Data)
+                            testDecStr := ""
+                            if *decode {
+                                testDecStr = " " + DecodePacket(msg.Data)
+                            }
+                            log.Printf("TESTFREQ %d: Frequency %d (freqCorr=%d): OK, msg.data: %02X%s", testNumber, testChannelFreq, freqCorr, msg.Data, testDecStr)
                             loopPeriod = time.Duration(maxFreq + 2) * idLoopPeriods[actChan[maxChan-1]]
                             loopTimer = time.After(loopPeriod)
                             nextHop <- p.SetHop(0, 0)
@@ -427,12 +433,16 @@ func main() {
                         // normal hopping
                         chLastHops[msgIdToChan[int(msg.ID)]] = p.HopToSeq(actHopChanIdx)
                         chLastVisits[msgIdToChan[int(msg.ID)]] = curTime
+                        decStr := ""
+                        if *decode {
+                            decStr = " " + DecodePacket(msg.Data)
+                        }
                         if *undefined {
-                            log.Printf("%02X %d %d %d %d %d msg.ID=%d undefined:%d", 
-                                msg.Data, chTotMsgs[0], chTotMsgs[1], chTotMsgs[2], chTotMsgs[3], totInit, msg.ID, idUndefs)
+                            log.Printf("%02X %d %d %d %d %d msg.ID=%d undefined:%d%s",
+                                msg.Data, chTotMsgs[0], chTotMsgs[1], chTotMsgs[2], chTotMsgs[3], totInit, msg.ID, idUndefs, decStr)
                         } else {
-                            log.Printf("%02X %d %d %d %d %d msg.ID=%d", 
-                                msg.Data, chTotMsgs[0], chTotMsgs[1], chTotMsgs[2], chTotMsgs[3], totInit, msg.ID) 
+                            log.Printf("%02X %d %d %d %d %d msg.ID=%d%s",
+                                msg.Data, chTotMsgs[0], chTotMsgs[1], chTotMsgs[2], chTotMsgs[3], totInit, msg.ID, decStr)
                         }
                         handleNxtPacket = true
                     }
