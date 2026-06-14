@@ -1,0 +1,4 @@
+github.com/jpoirier/gortlsdr v2.10.0+incompatible h1:y76oRd3I2+hqcFY2uxbKIRsHzVjJm2s06FnB0SHr96M=
+github.com/jpoirier/gortlsdr v2.10.0+incompatible/go.mod h1:RcFRxNvqWDjxbCTkWcmGP4WV0HHSrG1Q0ce0V3TdN6o=
+github.com/lheijst/rtldavis v0.0.0-20200605114342-b95d5d734e46 h1:5ZZKTCiwvUvrRDBKEQTxOSIbm57m47pGTnYSHhQZa08=
+github.com/lheijst/rtldavis v0.0.0-20200605114342-b95d5d734e46/go.mod h1:TuKtT8aKehNdvyP+3BBEQGefeGzj8ZQk9s434C6gOJs=
