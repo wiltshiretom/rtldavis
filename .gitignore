@@ -24,3 +24,9 @@ _testmain.go
 *.prof
 
 data
+
+# Vendor directory - not needed, replace directive in go.mod handles local source
+vendor/
+
+# Compiled binary
+rtldavis
