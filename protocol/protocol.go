@@ -86,9 +86,10 @@ func NewParser(symbolLength int, tf string) (p Parser) {
 
 	if tf == "EU" {
 		p.channels = []int{
+			868136000, 868256000, 868376000, 868496000, 868616000, //Scan-confirmed 120kHz spacing (wiltshiretom)
+			// 868077000, 868130000, 868248000, 868377250, 868490000, //Works at close range only
 			// 868077250, 868197250, 868317250, 868437250, 868557250, // EU original (20190324)
 			// 868078500, 868199000, 868318500, 868438500, 868560000, //https://www.wxforum.net/index.php?topic=36267.0
-			868077000, 868130000, 868248000, 868377250, 868490000, //These work with very few losses (wiltshirestom)
 			// 868066711, 868297119, 868527466, 868181885, 868412292, //From DavisRFM69 project
 		}
 		p.ChannelCount = len(p.channels)
